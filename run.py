@@ -181,7 +181,10 @@ def commandPrompt():
             name, val = cmd.groups()
             if name in G.configuration:
                 try:
-                    val = type(G.configuration[name])(val)
+                    if type(G.configuration[name]) is bool:
+                        val = val != "False"
+                    else:
+                        val = type(G.configuration[name])(val)
                     G.configuration[name] = val
                     if name == "showEvery":
                         print("Resetting episode rewards..")
