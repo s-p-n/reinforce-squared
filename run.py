@@ -1,5 +1,4 @@
 #!/usr/bin/python3
-
 import numpy as np
 from PIL import Image
 import cv2
@@ -112,18 +111,20 @@ G.fig = plt.figure()
 G.quit = False
 G.episode_rewards = []
 G.configuration = {
-    "sleepTime": 0.2,
+    "sleepTime": 0.01,
     "showEvery": 100,
     "movePenalty": 1,
-    "enemyPenalty": 25,
+    "iterationPenalty": 75,
+    "enemyPenalty": 150,
     "foodReward": 300,
-    "epsilon": 2.6043737900105768e-20,
+    "epsilon": 0.9,
     "epsilonDecay": 0.9998,
     "learningRate": 0.1,
     "discount": 0.95,
-    "enemyHandicap": 1,
+    "enemyHandicap": 5,
     "enemyCount": 1,
-    "bounds": True
+    "bounds": True,
+    "iterations": 100
 }
 start_q_table = "./latest.pickle" # None or Filename
 
@@ -195,11 +196,15 @@ def commandPrompt():
 tCmd = Thread(target=commandPrompt)
 #tChart = Thread(target=liveChart)
             
-print(f"Please wait, as we are loading {start_q_table}..")
+print(f"Please wait, as I try loading {start_q_table}..")
 try:
     with open(start_q_table, "rb") as f:
         q_table = pickle.load(f)
 except FileNotFoundError:
+    print(f"Welp, I failed to find {start_q_table}.")
+    print("Please wait while I create a q_table.")
+    print("This will take a while.")
+    print("Pro tip, you can save your work to resume later. The command is `save latest`")
     q_table = {}
     for i in range(-SIZE+1, SIZE):
         for ii in range(-SIZE+1, SIZE):
@@ -216,6 +221,7 @@ while G.quit == False:
     # Configuration:
     sleepTime = G.configuration["sleepTime"]
     SHOW_EVERY = G.configuration["showEvery"]
+    ITERATION_PENALTY = G.configuration["iterationPenalty"]
     MOVE_PENALTY = G.configuration["movePenalty"]
     ENEMY_PENALTY = G.configuration["enemyPenalty"]
     FOOD_REWARD = G.configuration["foodReward"]
@@ -247,7 +253,7 @@ while G.quit == False:
 
 
 
-    for i in range(1000000):
+    for i in range(G.configuration["iterations"]):
         if G.quit == True:
             break
         start_dist = np.linalg.norm(player-food)
@@ -256,9 +262,12 @@ while G.quit == False:
         if j == len(enemies):
             j = 0
 
+        #### move enemy toward player ###
+        if i % enemyHandicap == 0:
+            enemy.moveTowards(player)
+
         obs = (player-food, player-enemy)
 
-        #print(obs)
         if np.random.random() > epsilon:
             # GET THE ACTION
             action = np.argmax(q_table[obs])
@@ -267,24 +276,18 @@ while G.quit == False:
         # Take the action!
         player.action(action)
 
-        #### MAYBE move enemy toward player ###
-        if i % enemyHandicap == 0:
-            enemy.moveTowards(player)
-
-
-        #enemy.move()
-        #food.move()
-        ##############
-        dist = np.linalg.norm(player-food)
-        if player.x == enemy.x and player.y == enemy.y:
+        #foodDist = np.linalg.norm(player-food)
+        #enemyDist = np.linalg.norm(player-enemy)
+        playerEaten = player.x == enemy.x and player.y == enemy.y
+        foodEaten = player.x == food.x and player.y == food.y
+        if playerEaten:
             reward = -ENEMY_PENALTY
-        elif player.x == food.x and player.y == food.y:
+        elif foodEaten:
             reward = FOOD_REWARD
-        elif dist < start_dist:
-            reward = MOVE_PENALTY
+        elif i == (G.configuration["iterations"] - 1):
+            reward = ITERATION_PENALTY
         else:
-            reward = -MOVE_PENALTY*2
-        ## NOW WE KNOW THE REWARD, LET'S CALC YO
+            reward = -MOVE_PENALTY
         # first we need to obs immediately after the move.
         new_obs = (player-food, player-enemy)
         max_future_q = np.max(q_table[new_obs])
