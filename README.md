@@ -75,6 +75,42 @@ Pro tip, you can save your work to resume later. The command is `save latest`
 
 Don't worry about the warnings for now. Basically, follow the directions. This is a cheap-o command-line interface running on a seperate thread. It's really cool, you can change the environment while the model is learning, and it leads to pretty smart models. Here's the fun part. Are the models overfitting? Find out by changing the suggested settings, and see what happens!
 
+Once you're in, you can try typing a command, such as `list`:
+```
+> list
+	sleepTime = 0.02
+	showEvery = 500
+	movePenalty = 1
+	timeoutPenalty = 75
+	enemyPenalty = 150
+	foodReward = 150
+	epsilon = 0.6065003298938891
+	epsilonDecay = 0.9998
+	learningRate = 0.1
+	discount = 0.95
+	enemyHandicap = 100
+	enemyCount = 1
+	bounds = True
+	playerFirst = True
+	iterations = 100
+```
 
+Now that you know all of the configuration names and value-types, you can attempt to alter them.
 
+Go ahead and try making the environment wrap around instead of having outer walls using `bounds = False`
+
+I think this model is too dumb to learn how to evade a faster enemy. But just for kicks, let's make the enemy as fast as your model:
+```
+> enemyHandicap = 1
+```
+... Wait...
+
+Woah, that model is getting pretty smart! We'd better **save**:
+```
+> save latest
+Would you like to save the current configuration? (y|n)y
+Saving config..
+Saving to 'latest.pickle'..
+```
+Cool, Python pauses the simulation while the save is in progress, and once the save is complete, your model is saved, but also remains in memory and resumes running.
 # Happy Modelling!!
