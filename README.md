@@ -1,5 +1,7 @@
 # reinforce-squared
-A machine learning environment with live configuration. (Based on a SentDex tutorial)
+Reinforce-Squared is a machine learning environment with a display window, a graph and a console used to enter commands that alter your model or the environment. The project is based on a [video tutorial by Sentdex](https://youtu.be/G92TF4xYQcU), and that video goes great with reinforce-squared, as you can learn what some of the configurations do, and make pretty smart blue dots.
+
+This project is only a few days old as of this writing, so please post here or create an issue (on github) if something doesn't work right.
 
 I really love this program, I hope you do too. I tried to make it friendly to non-programmers, but still challenge the non-programmer or new programmer to get it working, and reward them with a quite satisfying command-line interface.
 
