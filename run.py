@@ -9,6 +9,7 @@ import time
 import random
 import re
 from threading import Thread,Lock
+import json
 
 SIZE = 25
 
@@ -110,22 +111,7 @@ G.lock = Lock()
 G.fig = plt.figure()
 G.quit = False
 G.episode_rewards = []
-G.configuration = {
-    "sleepTime": 0.01,
-    "showEvery": 100,
-    "movePenalty": 1,
-    "iterationPenalty": 75,
-    "enemyPenalty": 150,
-    "foodReward": 300,
-    "epsilon": 0.9,
-    "epsilonDecay": 0.9998,
-    "learningRate": 0.1,
-    "discount": 0.95,
-    "enemyHandicap": 5,
-    "enemyCount": 1,
-    "bounds": True,
-    "iterations": 100
-}
+
 start_q_table = "./latest.pickle" # None or Filename
 
 PLAYER_N = 1  # player key in dict
@@ -137,24 +123,50 @@ d = {1: (255, 175, 0),
      2: (0, 255, 0),
      3: (0, 0, 255)}
 
+def loadConfig (configFile):
+    try:
+        with open(configFile) as json_file:
+            G.configuration = json.load(json_file)
+    except FileNotFoundError:
+        with open('default.json') as json_file:
+            print("WARNING:\tusing default config")
+            print("\t^-- Fix by running `save latest`")
+            G.configuration = json.load(json_file)
+
+def saveConfig (configFile):
+    with open(configFile, 'w') as json_file:
+        json.dump(G.configuration, json_file)
+
 def commandPrompt():
+    first = True
     while True:
         prompt = """
-|   Do not close the simulation window directly.             |
-|   It's okay to close the chart window, though.             |
-|   Type 'q' or 'CTRL+C' to quit                             |
+|   Type 'h' or 'help' or '-h' or '--help' for this dialog.  |
+|   Do not close the simulation windows (it crashes)         |
+|   Type 'q' or 'CTRL+C' over-and-over to quit               |
 |   Type 'save latest' to save to latest                     |
 |   Type 'save backup' to save to a time-stamped filename    |
 |---You may configure the environment.-----------------------|
 |   Type 'list' to show the current configuration            |
 |   Type something like:                                     |
-|       > name=123.456                                       |
-|   to alter a configuration.                                |
-
-> """
-        go = input(prompt)
-       
-        if go == 'q':
+|       > enemyHandicap = 1                                  |
+|   Or something like:                                       |
+|       > bounds=False                                       |
+|   to alter a configuration entry.                          |
+"""
+        if first:
+            first = False
+            print(prompt)
+        go = input("\n> ")
+        helpList = [
+            'h',
+            'help',
+            '-h',
+            '--help'
+        ]
+        if go in helpList:
+            print(prompt)
+        elif go == 'q':
             print("Stopping..")
             G.quit = True
             #plt.close('all')
@@ -162,6 +174,13 @@ def commandPrompt():
         elif go[0:4] == 'save':
             target = go.split(' ')[1]
             if target == 'latest':
+                answer = ''
+                while answer != 'y' and answer != 'n':
+                    answer = input("Would you like to save the current configuration? (y|n)").lower()
+                
+                if answer == 'y':
+                    print("Saving config..")
+                    saveConfig('latest.json')
                 print(f"Saving to 'latest.pickle'..")
                 with open("latest.pickle", "wb") as f:
                     pickle.dump(q_table, f)
@@ -196,6 +215,8 @@ def commandPrompt():
             else:
                 print(f"I'm sorry, the name '{name}' is not in the configuration.\nRemember, type 'list' to view the configurable options.")
 
+loadConfig('./latest.json')
+
 tCmd = Thread(target=commandPrompt)
 #tChart = Thread(target=liveChart)
             
@@ -224,7 +245,7 @@ while G.quit == False:
     # Configuration:
     sleepTime = G.configuration["sleepTime"]
     SHOW_EVERY = G.configuration["showEvery"]
-    ITERATION_PENALTY = G.configuration["iterationPenalty"]
+    ITERATION_PENALTY = G.configuration["timeoutPenalty"]
     MOVE_PENALTY = G.configuration["movePenalty"]
     ENEMY_PENALTY = G.configuration["enemyPenalty"]
     FOOD_REWARD = G.configuration["foodReward"]
@@ -288,7 +309,7 @@ while G.quit == False:
         elif foodEaten:
             reward = FOOD_REWARD
         elif i == (G.configuration["iterations"] - 1):
-            reward = ITERATION_PENALTY
+            reward = -ITERATION_PENALTY
         else:
             reward = -MOVE_PENALTY
         # first we need to obs immediately after the move.

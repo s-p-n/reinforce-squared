@@ -1,0 +1,17 @@
+{
+    "sleepTime": 0.02,
+    "showEvery": 500,
+    "movePenalty": 1,
+    "timeoutPenalty": 75,
+    "enemyPenalty": 150,
+    "foodReward": 150,
+    "epsilon": 1.0,
+    "epsilonDecay": 0.9998,
+    "learningRate": 0.1,
+    "discount": 0.95,
+    "enemyHandicap": 100,
+    "enemyCount": 1,
+    "bounds": true,
+    "playerFirst": true,
+    "iterations": 100
+}
