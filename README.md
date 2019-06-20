@@ -1,10 +1,10 @@
 # reinforce-squared
 A machine learning environment with live configuration. (Based on a SentDex tutorial)
 
-Okay, don't use this yet. It's not ready.
-
+This is experimental. By proceding, you agree that nobody is liable for anything that happens as a result of executing this code. If you are interested in trying **reinforce-squared**, here's how I suggest getting things set-up.
 # Environment
-	This is a Python3 project. See the top of `run.py` for the dependencies. You can probably use pip3 to install everything that's needed to run this.
+
+This is a Python3 project. See the top of `run.py` for the dependencies. You can probably use pip3 to install everything that's needed to run this.
 
 # Where did this code come from?
 * `qlearning-4.py` is pretty much straight from Sentdex's tutorial located here: https://pythonprogramming.net/own-environment-q-learning-reinforcement-learning-python-tutorial/
@@ -36,7 +36,7 @@ Obviously, `foo` is not a real library- make sense?
 So yeah, just keep attempting to run the program, and installing libraries as needed using `pip`.
 
 # Running the program:
-The payload is `run.py`. It comes with a line at the top of the file like so:
+The payload is `run.py`
 
 ```
 python3 run.py
