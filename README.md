@@ -1,6 +1,8 @@
 # reinforce-squared
 A machine learning environment with live configuration. (Based on a SentDex tutorial)
 
+I really love this program, I hope you do too. I tried to make it friendly to non-programmers, but still challenge the non-programmer or new programmer to get it working, and reward them with a quite satisfying command-line interface.
+
 This is experimental. By proceding, you agree that nobody is liable for anything that happens as a result of executing this code. If you are interested in trying **reinforce-squared**, here's how I suggest getting things set-up.
 # Environment
 
@@ -41,3 +43,38 @@ The payload is `run.py`
 ```
 python3 run.py
 ```
+
+
+You should (eventually) be greeted with all of this:
+```
+WARNING:	using default config
+	^-- Fix by running `save latest`
+Please wait, as I try loading ./latest.pickle..
+Welp, I failed to find ./latest.pickle.
+Please wait while I create a q_table.
+This will take a while.
+Pro tip, you can save your work to resume later. The command is `save latest`
+
+|   Type 'h' or 'help' or '-h' or '--help' for this dialog.  |
+|   Do not close the simulation windows (it crashes)         |
+|   Type 'q' or 'CTRL+C' over-and-over to quit               |
+|   Type 'save latest' to save to latest                     |
+|   Type 'save backup' to save to a time-stamped filename    |
+|---You may configure the environment.-----------------------|
+|   Type 'list' to show the current configuration            |
+|   Type something like:                                     |
+|       > enemyHandicap = 1                                  |
+|   Or something like:                                       |
+|       > bounds=False                                       |
+|   to alter a configuration entry.                          |
+
+
+> 
+```
+
+
+Don't worry about the warnings for now. Basically, follow the directions. This is a cheap-o command-line interface running on a seperate thread. It's really cool, you can change the environment while the model is learning, and it leads to pretty smart models. Here's the fun part. Are the models overfitting? Find out by changing the suggested settings, and see what happens!
+
+
+
+# Happy Modelling!!
