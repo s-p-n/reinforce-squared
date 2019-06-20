@@ -19,23 +19,10 @@ If python3 exists at `/usr/bin/python3`, the following code should get you at le
 cd ~
 git clone https://github.com/s-p-n/reinforce-squared.git
 cd reinforce-squared
+pip3 install opencv-python matplotlib image numpy
 python3 ./run.py
 ```
-You might get a message about libraries not being installed, similar to this:
-```
-Traceback (most recent call last):
-  File "./run.py", line 2, in <module>
-    import foo
-ModuleNotFoundError: No module named 'foo'
-```
-Where `foo` is the name of the module you need to install using something like:
-```
-pip3 install foo
-``` 
-
-Obviously, `foo` is not a real library- make sense?
-
-So yeah, just keep attempting to run the program, and installing libraries as needed using `pip`.
+Hopefully that gets all the dependencies. Otherwise, hit up Google and find the needed packages.
 
 # Running the program:
 The payload is `run.py`
