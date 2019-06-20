@@ -14,7 +14,7 @@ This is a Python3 project. See the top of `run.py` for the dependencies. You can
 * `run.py` is based on `qlearning-4.py`, but has several added features supplied by me, Spencer A. Lockhart. 
 
 # Installing this project
-If python3 exists at `/usr/bin/python3`, the following code should get you at least to some python3 dependency errors:
+If python3 exists at `/usr/bin/python3`, the following code should get you setup:
 ```
 cd ~
 git clone https://github.com/s-p-n/reinforce-squared.git
